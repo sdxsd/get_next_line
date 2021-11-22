@@ -49,7 +49,7 @@ static char	*gnl_remainder(void *buf, size_t remainder_len)
 	return (remainder);
 }
 
-static char	*j_rem(char *cur_rem, char *new_rem)
+static char	*merge(char *cur_rem, char *new_rem)
 {
 	char	*merged;
 
@@ -76,8 +76,9 @@ char	*get_next_line(int fd)
 	if (!bytes_read)
 		bytes_read = ft_strlen((char *)buf);
 	c_buf = gnl_getline(buf, bytes_read);
+	free(buf);
 	lsize = ft_strlen(c_buf);
-	rem = j_rem(rem, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
+	rem = merge(rem, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
 	return (c_buf);
 }
 
