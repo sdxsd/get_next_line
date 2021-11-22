@@ -12,6 +12,8 @@
 
 #include "get_next_line.h"
 #include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
 
 static size_t	read_data(void	*buf, int fd)
 {
@@ -51,6 +53,8 @@ static char	*join_remainder(char *cur_rem, char *new_rem)
 {
 	char	*merged;
 
+	if (!cur_rem)
+		cur_rem = "";
 	merged = gnl_strjoin(cur_rem, new_rem);
 	free(cur_rem);
 	free(new_rem);
@@ -64,7 +68,20 @@ char	*get_next_line(int fd)
 	static char	*remainder;
 	size_t		bytes_read;
 	void		*buf;
+	char		*c_buf;
+	size_t		lsize;
 
+	buf = malloc(sizeof(char) * BUFFER_SIZE);
 	bytes_read = read_data(buf, fd);
-	gnl_getline();
+	c_buf = gnl_getline(buf, bytes_read);
+	lsize = ft_strlen(c_buf);
+	remainder = join_remainder(remainder, gnl_remainder(buf, (bytes_read - BUFFER_SIZE)));
+	printf("%s", remainder);
+	return (c_buf);
+}
+
+int main(void)
+{
+	int fd = open("gentoo.txt", O_RDWR);
+	printf("%s", get_next_line(fd));
 }
