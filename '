@@ -37,7 +37,7 @@ static char	*gnl_getline(void *buf, size_t bufsize)
 			break ;
 		iterator++;
 	}
-	line = gnl_strndup(c_buf, iterator + 1);
+	line = gnl_strndup(c_buf, iterator);
 	return (line);
 }
 
@@ -73,19 +73,15 @@ char	*get_next_line(int fd)
 
 	buf = malloc(sizeof(char) * BUFFER_SIZE);
 	bytes_read = read_data(buf, fd);
-	if (!bytes_read)
-		bytes_read = ft_strlen((char *)buf);
 	c_buf = gnl_getline(buf, bytes_read);
-	lsize = ft_strlen(c_buf);
+	lsize = ft_strlen(c_buf) + 1;
 	remainder = j_rem(remainder, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
-	//printf("%s\n", remainder);
+	printf("%s\n", remainder);
 	return (c_buf);
 }
 
 int main(void)
 {
 	int fd = open("gentoo.txt", O_RDWR);
-	printf("FIRST CALL: %s", get_next_line(fd));
-	printf("SECOND CALL: %s", get_next_line(fd));
-	printf("THIRD CALL: %s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
 }
