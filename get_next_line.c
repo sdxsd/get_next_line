@@ -65,7 +65,7 @@ static char	*j_rem(char *cur_rem, char *new_rem)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
+	static char	*rem;
 	size_t		bytes_read;
 	void		*buf;
 	char		*c_buf;
@@ -77,11 +77,11 @@ char	*get_next_line(int fd)
 		bytes_read = ft_strlen((char *)buf);
 	c_buf = gnl_getline(buf, bytes_read);
 	lsize = ft_strlen(c_buf);
-	remainder = j_rem(remainder, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
-	//printf("%s\n", remainder);
+	rem = j_rem(rem, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
 	return (c_buf);
 }
 
+/*
 int main(void)
 {
 	int fd = open("gentoo.txt", O_RDWR);
@@ -89,3 +89,4 @@ int main(void)
 	printf("SECOND CALL: %s", get_next_line(fd));
 	printf("THIRD CALL: %s", get_next_line(fd));
 }
+*/
