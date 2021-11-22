@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -o
+CFLAGS = -Wall -Wextra -Werror
 NAME = get_next_line.a
 CFILES = \
 	get_next_line.c \
