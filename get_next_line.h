@@ -18,6 +18,7 @@
 #  define BUFFER_SIZE 42
 # endif
 # include <stdlib.h>
+# include <unistd.h>
 /*
 * Þe funktion get_next_line() af krïg fōrgenden līne
 * krïgt ān integer als ærgument ān et retürnt þen
@@ -30,5 +31,6 @@ char	*gnl_strndup(const char *s1, size_t len);
 char	*gnl_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *str);
 char	*ft_strncpy(char *dest, char *src, size_t n);
+int		is_newline(void *buf, ssize_t bytes_read);
 
 #endif

@@ -53,24 +53,6 @@ size_t	ft_strlen(const char *str)
 	return (iterator);
 }
 
-char	*ft_strncpy(char *dest, char *src, size_t n)
-{
-	size_t	iterator;
-
-	iterator = 0;
-	while (iterator < n && src[iterator] != '\0')
-	{
-		dest[iterator] = src[iterator];
-		++iterator;
-	}
-	while (iterator < n)
-	{
-		dest[iterator] = '\0';
-		iterator++;
-	}
-	return (dest);
-}
-
 char	*gnl_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
@@ -86,10 +68,25 @@ char	*gnl_strjoin(char const *s1, char const *s2)
 	if (!str)
 		return (NULL);
 	b_str = str;
-	ft_strncpy(str, (char *)s1, s1_l);
+	gnl_memcpy(str, (char *)s1, s1_l);
 	str += s1_l;
-	ft_strncpy(str, (char *)s2, s2_l);
+	gnl_memcpy(str, (char *)s2, s2_l);
 	str += s2_l;
 	*str = '\0';
 	return (b_str);
+}
+
+int	is_newline(void	*buf, ssize_t bytes_read)
+{
+	ssize_t	iterator;
+	char	*c_buf;
+
+	c_buf = (char *)buf;
+	iterator = 0;
+	while (iterator < bytes_read)
+	{
+		if (c_buf[iterator] == '\n')
+			return (1);
+	}
+	return (0);
 }

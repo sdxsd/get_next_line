@@ -11,18 +11,25 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 
-static size_t	read_data(void	*buf, int fd)
+// Recode function to check for newline
+static ssize_t	read_data(void	*buf, int fd)
 {
-	size_t	bytes_read;
+	ssize_t	bytes_read;
+	void	*buf_2;
 
 	bytes_read = read(fd, buf, BUFFER_SIZE);
+	if (!is_newline(buf, bytes_read))
+	{
+		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
+		bytes_read += read(fd, buf, BUFFER_SIZE);
+	}
 	return (bytes_read);
 }
 
+// Make read continue to read if newline is not encountered
 static char	*gnl_getline(void *buf, size_t bufsize)
 {
 	char	*c_buf;
@@ -51,6 +58,7 @@ static char	*gnl_remainder(void *buf, size_t remainder_len)
 	return (remainder);
 }
 
+// Make program fail if merge fails
 static char	*merge(char *cur_rem, char *new_rem)
 {
 	char	*merged;
@@ -65,6 +73,7 @@ static char	*merge(char *cur_rem, char *new_rem)
 	return (merged);
 }
 
+// Handle errors with read()
 char	*get_next_line(int fd)
 {
 	static char	*rem;
@@ -73,7 +82,7 @@ char	*get_next_line(int fd)
 	char		*c_buf;
 	size_t		lsize;
 
-	if (!fd)
+	if (fd < 0)
 		return (NULL);
 	buf = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buf)
@@ -90,7 +99,7 @@ char	*get_next_line(int fd)
 	return (c_buf);
 }
 
-/*
+
 int main(void)
 {
 	int fd = open("gentoo.txt", O_RDWR);
@@ -98,4 +107,3 @@ int main(void)
 	printf("SECOND CALL: %s", get_next_line(fd));
 	printf("THIRD CALL: %s", get_next_line(fd));
 }
-*/
