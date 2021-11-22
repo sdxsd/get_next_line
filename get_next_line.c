@@ -29,6 +29,8 @@ static char	*gnl_getline(void *buf, size_t bufsize)
 	char	*line;
 	size_t	iterator;
 
+	if (!buf)
+		return (NULL);
 	c_buf = (char *)buf;
 	iterator = 0;
 	while (c_buf[iterator] != '\n')
@@ -71,7 +73,11 @@ char	*get_next_line(int fd)
 	char		*c_buf;
 	size_t		lsize;
 
+	if (!fd)
+		return (NULL);
 	buf = malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buf)
+		return (NULL);
 	bytes_read = read_data(buf, fd);
 	if (!bytes_read)
 		bytes_read = ft_strlen((char *)buf);
@@ -79,6 +85,8 @@ char	*get_next_line(int fd)
 	free(buf);
 	lsize = ft_strlen(c_buf);
 	rem = merge(rem, gnl_remainder(buf + lsize, (BUFFER_SIZE - lsize)));
+	if (!rem)
+		return (NULL);
 	return (c_buf);
 }
 
