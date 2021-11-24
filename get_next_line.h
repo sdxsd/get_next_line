@@ -33,6 +33,6 @@ char	*gnl_strndup(const char *s1, size_t len);
 char	*gnl_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *str);
 char	*ft_strncpy(char *dest, char *src, size_t n);
-int		is_newline(void *buf, ssize_t bytes_read);
+int		is_newline(char *buf, ssize_t bytes_read);
 
 #endif

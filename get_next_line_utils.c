@@ -76,16 +76,14 @@ char	*gnl_strjoin(char const *s1, char const *s2)
 	return (b_str);
 }
 
-int	is_newline(void	*buf, ssize_t bytes_read)
+int	is_newline(char	*buf, ssize_t bytes_read)
 {
 	ssize_t	iterator;
-	char	*c_buf;
 
-	c_buf = (char *)buf;
 	iterator = 0;
 	while (iterator < bytes_read)
 	{
-		if (c_buf[iterator] == '\n')
+		if (buf[iterator] == '\n')
 			return (1);
 		iterator++;
 	}
