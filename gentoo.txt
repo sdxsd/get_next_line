@@ -3,3 +3,7 @@ FreeBSD
 OpenBSD
 MacOS
 Windows
+Solaris
+GNU + Navi
+GNU/Darwin
+TempleOS
