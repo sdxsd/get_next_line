@@ -123,4 +123,5 @@ int main(void)
 	printf("FOURTH CALL: %s", get_next_line(fd));
 	printf("FIFTH CALL: %s", get_next_line(fd));
 	printf("SIXTH CALL: %s", get_next_line(fd));
+	printf("SEVENTH CALL: %s", get_next_line(fd));
 }
