@@ -87,6 +87,7 @@ int	is_newline(void	*buf, ssize_t bytes_read)
 	{
 		if (c_buf[iterator] == '\n')
 			return (1);
+		iterator++;
 	}
 	return (0);
 }

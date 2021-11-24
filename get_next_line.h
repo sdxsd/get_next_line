@@ -19,12 +19,14 @@
 # endif
 # include <stdlib.h>
 # include <unistd.h>
+
 /*
 * Þe funktion get_next_line() af krïg fōrgenden līne
 * krïgt ān integer als ærgument ān et retürnt þen
 * fōrgenden līne in þe file. Et begint ān þen earsten līne. 
 */
 
+char	*merge(char *cur_rem, char *new_rem);
 char	*get_next_line(int fd);
 void	*gnl_memcpy(void *dst, const void *src, size_t n);
 char	*gnl_strndup(const char *s1, size_t len);

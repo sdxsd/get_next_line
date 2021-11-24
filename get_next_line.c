@@ -6,7 +6,7 @@
 /*   By: wmaguire <wmaguire@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/04 15:58:01 by wmaguire      #+#    #+#                 */
-/*   Updated: 2021/11/11 15:18:31 by wmaguire      ########   odam.nl         */
+/*   Updated: 2021/11/24 15:18:31 by wmaguire      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ static ssize_t	read_data(void	*buf, int fd)
 	void	*buf_2;
 
 	bytes_read = read(fd, buf, BUFFER_SIZE);
-	if (!is_newline(buf, bytes_read))
+	while (!is_newline(buf, bytes_read))
 	{
 		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
-		bytes_read += read(fd, buf, BUFFER_SIZE);
+		bytes_read += read(fd, buf_2, BUFFER_SIZE);
+		buf = merge((char *)buf,(char *)buf_2);
 	}
 	return (bytes_read);
 }
@@ -59,12 +60,12 @@ static char	*gnl_remainder(void *buf, size_t remainder_len)
 }
 
 // Make program fail if merge fails
-static char	*merge(char *cur_rem, char *new_rem)
+char	*merge(char *cur_rem, char *new_rem)
 {
 	char	*merged;
 
 	if (!cur_rem)
-		cur_rem = gnl_strndup("", 2);
+		cur_rem = gnl_strndup("", 1);
 	merged = gnl_strjoin(cur_rem, new_rem);
 	free(cur_rem);
 	free(new_rem);
@@ -77,7 +78,7 @@ static char	*merge(char *cur_rem, char *new_rem)
 char	*get_next_line(int fd)
 {
 	static char	*rem;
-	size_t		bytes_read;
+	ssize_t		bytes_read;
 	void		*buf;
 	char		*c_buf;
 	size_t		lsize;
@@ -88,6 +89,8 @@ char	*get_next_line(int fd)
 	if (!buf)
 		return (NULL);
 	bytes_read = read_data(buf, fd);
+	if (bytes_read == -1)
+		return (NULL);
 	if (!bytes_read)
 		bytes_read = ft_strlen((char *)buf);
 	c_buf = gnl_getline(buf, bytes_read);
@@ -99,7 +102,7 @@ char	*get_next_line(int fd)
 	return (c_buf);
 }
 
-
+/*
 int main(void)
 {
 	int fd = open("gentoo.txt", O_RDWR);
@@ -107,3 +110,4 @@ int main(void)
 	printf("SECOND CALL: %s", get_next_line(fd));
 	printf("THIRD CALL: %s", get_next_line(fd));
 }
+*/
