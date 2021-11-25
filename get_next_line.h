@@ -26,7 +26,6 @@
 * fōrgenden līne in þe file. Et begint ān þen earsten līne. 
 */
 
-char	*merge(char *cur_rem, char *new_rem);
 char	*get_next_line(int fd);
 void	*gnl_memcpy(void *dst, const void *src, size_t n);
 char	*gnl_strndup(const char *s1, size_t len);

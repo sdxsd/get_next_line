@@ -24,6 +24,7 @@ static ssize_t	read_data(char *buf, int fd)
 	ssize_t	bytes_read;
 	ssize_t	read_return;
 	char	*buf_2;
+	char	*tmp;
 
 	read_return = read(fd, buf, BUFFER_SIZE);
 	if (!read_return)
@@ -31,11 +32,13 @@ static ssize_t	read_data(char *buf, int fd)
 	else if (read_return == -1)
 		return (0);
 	bytes_read = read_return;
-	while (!is_newline(buf, read_return))
+	while (!is_newline(buf, ft_strlen(buf)))
 	{
 		buf_2 = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		bytes_read += read(fd, buf_2, BUFFER_SIZE + 1);
-		buf = merge(buf, buf_2);
+		tmp = buf;
+		buf = gnl_strjoin(buf, buf_2);
+		free(tmp);
 	}
 	return (bytes_read);
 }
@@ -61,38 +64,35 @@ static char	*gnl_getline(void *buf, size_t bufsize)
 	return (line);
 }
 
-char	*merge(char *cur_rem, char *new_rem)
+int	to_newline(char *buf)
 {
-	char	*merged;
+	int	iterator;
 
-	if (!cur_rem)
-		cur_rem = gnl_strndup("", 1);
-	merged = gnl_strjoin(cur_rem, new_rem);
-	free(cur_rem);
-	free(new_rem);
-	if (!merged)
-		return (NULL);
-	return (merged);
+	iterator = 0;
+	while (buf[iterator] != '\0' && buf[iterator] != '\n')
+		iterator++;
+	return (iterator + 1);
 }
 
-// Make buf a coole kanjer char *
 char	*get_next_line(int fd)
 {
-	static char	*buf;
-	ssize_t		bytes_read;
+	static char		*buf;
+	char			*line;
+	ssize_t			bytes_read;
 
 	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	bytes_read = read_data(buf, fd);
-	printf("%s", buf);
-	return (buf);
+	line = gnl_strndup(buf, to_newline(buf));
+	buf += ft_strlen(line);
+	return (line);
 }
 
 
 int main(void)
 {
 	int fd = open("gentoo.txt", O_RDWR);
-	printf("FIRST CALL: %s", get_next_line(fd));
-	//printf("SECOND CALL: %s", get_next_line(fd));
+	printf("%s", get_next_line(fd));
+	printf("SECOND CALL: %s", get_next_line(fd));
 	//printf("THIRD CALL: %s", get_next_line(fd));
 	//printf("FOURTH CALL: %s", get_next_line(fd));
 	//printf("FIFTH CALL: %s", get_next_line(fd));
