@@ -28,8 +28,8 @@ static ssize_t	read_data(char *buf, int fd)
 
 	read_return = read(fd, buf, BUFFER_SIZE);
 	if (!read_return)
-		read_return = ft_strlen((char *)buf);
-	else if (read_return == -1)
+		read_return = ft_strlen(buf);
+	else if (read_return < 0)
 		return (0);
 	bytes_read = read_return;
 	while (!is_newline(buf, ft_strlen(buf)))
@@ -41,27 +41,6 @@ static ssize_t	read_data(char *buf, int fd)
 		free(tmp);
 	}
 	return (bytes_read);
-}
-
-// Make read continue to read if newline is not encountered
-static char	*gnl_getline(void *buf, size_t bufsize)
-{
-	char	*c_buf;
-	char	*line;
-	size_t	iterator;
-
-	if (!buf)
-		return (NULL);
-	c_buf = (char *)buf;
-	iterator = 0;
-	while (c_buf[iterator] != '\n')
-	{
-		if (iterator >= bufsize)
-			break ;
-		iterator++;
-	}
-	line = gnl_strndup(c_buf, iterator + 1);
-	return (line);
 }
 
 int	to_newline(char *buf)
@@ -76,26 +55,14 @@ int	to_newline(char *buf)
 
 char	*get_next_line(int fd)
 {
-	static char		*buf;
-	char			*line;
-	ssize_t			bytes_read;
+	static char	*buf;
+	static int	offset;
+	ssize_t		bytes_read;
+	char		*line;
 
-	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buf = malloc(sizeof(char) * BUFFER_SIZE);
 	bytes_read = read_data(buf, fd);
-	line = gnl_strndup(buf, to_newline(buf));
-	buf += ft_strlen(line);
+	line = gnl_strndup((buf + offset), to_newline(buf + offset));
+	offset += ft_strlen(line);
 	return (line);
-}
-
-
-int main(void)
-{
-	int fd = open("gentoo.txt", O_RDWR);
-	printf("%s", get_next_line(fd));
-	printf("SECOND CALL: %s", get_next_line(fd));
-	//printf("THIRD CALL: %s", get_next_line(fd));
-	//printf("FOURTH CALL: %s", get_next_line(fd));
-	//printf("FIFTH CALL: %s", get_next_line(fd));
-	//printf("SIXTH CALL: %s", get_next_line(fd));
-	//printf("SEVENTH CALL: %s", get_next_line(fd));
 }
