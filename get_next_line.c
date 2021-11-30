@@ -14,31 +14,31 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-// What Job would suggest:
-// Make it read until newline found or until end of file/error
+char	*merge(char *buf_1, char *buf_2)
+{
+	char	*merged;
 
-// What if read returns 0 or -1 everything is completely fucked
-// nothing works ~ Job
-static ssize_t	read_data(char *buf, int fd)
+	merged = gnl_strjoin(buf_1, buf_2);
+	if (!merged)
+		return (NULL);
+	return (merged);
+}
+
+static ssize_t	read_data(char **buf, int fd)
 {
 	ssize_t	bytes_read;
-	ssize_t	read_return;
 	char	*buf_2;
-	char	*tmp;
+	char	*merged;
 
-	read_return = read(fd, buf, BUFFER_SIZE);
-	if (!read_return)
-		read_return = ft_strlen(buf);
-	else if (read_return < 0)
-		return (0);
-	bytes_read = read_return;
-	while (!is_newline(buf, ft_strlen(buf)))
+	bytes_read = read(fd, buf, BUFFER_SIZE);
+	if (bytes_read > 0 && !is_newline(*buf, BUFFER_SIZE))
 	{
-		buf_2 = malloc(sizeof(char) * BUFFER_SIZE + 1);
-		bytes_read += read(fd, buf_2, BUFFER_SIZE + 1);
-		tmp = buf;
-		buf = gnl_strjoin(buf, buf_2);
-		free(tmp);
+		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
+		bytes_read += read_data(&buf_2, fd);
+		merged = merge(*buf, buf_2);
+		free(buf);
+		free(buf_2);
+		*buf = merged;
 	}
 	return (bytes_read);
 }
@@ -61,7 +61,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	buf = malloc(sizeof(char) * BUFFER_SIZE);
-	bytes_read = read_data(buf, fd);
+	bytes_read = read_data(&buf, fd);
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
 	return (line);
