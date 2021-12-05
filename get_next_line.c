@@ -30,13 +30,13 @@ static ssize_t	read_data(char **buf, int fd)
 	char	*buf_2;
 	char	*merged;
 
-	bytes_read = read(fd, buf, BUFFER_SIZE);
+	bytes_read = read(fd, *buf, BUFFER_SIZE);
 	if (bytes_read > 0 && !is_newline(*buf, BUFFER_SIZE))
 	{
 		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
 		bytes_read += read_data(&buf_2, fd);
 		merged = merge(*buf, buf_2);
-		free(buf);
+		free(*buf);
 		free(buf_2);
 		*buf = merged;
 	}
@@ -62,6 +62,8 @@ char	*get_next_line(int fd)
 
 	buf = malloc(sizeof(char) * BUFFER_SIZE);
 	bytes_read = read_data(&buf, fd);
+	if (bytes_read < 0)
+		return (NULL);
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
 	return (line);
