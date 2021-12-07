@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 #include <fcntl.h>
 
 char	*merge(char *buf_1, char *buf_2)
