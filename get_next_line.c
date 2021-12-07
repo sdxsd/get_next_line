@@ -12,7 +12,6 @@
 
 #include "get_next_line.h"
 #include <fcntl.h>
-#include <stdio.h>
 
 static char	*reset(int *offset, char **buf)
 {
