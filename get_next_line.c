@@ -6,7 +6,7 @@
 /*   By: wmaguire <wmaguire@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/04 15:58:01 by wmaguire      #+#    #+#                 */
-/*   Updated: 2021/11/24 15:18:31 by wmaguire      ########   odam.nl         */
+/*   Updated: 2021/12/05 18:03:10 by wmaguire      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,23 @@ char	*get_next_line(int fd)
 	static int	offset;
 	ssize_t		bytes_read;
 	char		*line;
+	char		*tmp;
 
-	buf = malloc(sizeof(char) * BUFFER_SIZE);
-	bytes_read = read_data(&buf, fd);
-	if (bytes_read < 0)
-		return (NULL);
+	if (!buf)
+	{
+		buf = malloc(sizeof(char) * BUFFER_SIZE);
+		bytes_read = read_data(&buf, fd);
+		if (bytes_read < 0)
+			return (NULL);
+	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
+	if (offset == (int)ft_strlen(buf))
+	{
+		tmp = buf;
+		buf = NULL;
+		free(tmp);
+		offset = 0;
+	}
 	return (line);
 }
