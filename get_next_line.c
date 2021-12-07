@@ -13,6 +13,16 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 
+static char	*reset(int *offset, char *buf)
+{
+	char	*tmp;
+
+	*offset = 0;
+	tmp = buf;
+	free(tmp);
+	return (NULL);
+}
+
 char	*merge(char *buf_1, char *buf_2)
 {
 	char	*merged;
@@ -58,18 +68,14 @@ char	*get_next_line(int fd)
 	static int	offset;
 	ssize_t		bytes_read;
 	char		*line;
-	char		*tmp;
 
 	if (!buf)
 	{
 		buf = malloc(sizeof(char) * BUFFER_SIZE);
 		bytes_read = read_data(&buf, fd);
-		if (bytes_read == 0 && ft_strlen(buf) == 0)
+		if (bytes_read == 0)
 		{
-			tmp = buf;
-			buf = NULL;
-			free(tmp);
-			offset = 0;
+			buf = reset(&offset, buf);
 			return (NULL);
 		}
 		if (bytes_read < 0)
@@ -78,11 +84,6 @@ char	*get_next_line(int fd)
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
 	if (offset >= (int)ft_strlen(buf))
-	{
-		tmp = buf;
-		buf = NULL;
-		free(tmp);
-		offset = 0;
-	}
+		buf = reset(&offset, buf);
 	return (line);
 }
