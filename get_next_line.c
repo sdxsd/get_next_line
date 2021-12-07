@@ -12,14 +12,13 @@
 
 #include "get_next_line.h"
 #include <fcntl.h>
+#include <stdio.h>
 
-static char	*reset(int *offset, char *buf)
+static char	*reset(int *offset, char **buf)
 {
-	char	*tmp;
-
 	*offset = 0;
-	tmp = buf;
-	free(tmp);
+	free(*buf);
+	*buf = NULL;
 	return (NULL);
 }
 
@@ -74,16 +73,13 @@ char	*get_next_line(int fd)
 		buf = malloc(sizeof(char) * BUFFER_SIZE);
 		bytes_read = read_data(&buf, fd);
 		if (bytes_read == 0)
-		{
-			buf = reset(&offset, buf);
-			return (NULL);
-		}
+			return (reset(&offset, &buf));
 		if (bytes_read < 0)
 			return (NULL);
 	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
 	if (offset >= (int)ft_strlen(buf))
-		buf = reset(&offset, buf);
+		reset(&offset, &buf);
 	return (line);
 }
