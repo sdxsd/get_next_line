@@ -64,12 +64,20 @@ char	*get_next_line(int fd)
 	{
 		buf = malloc(sizeof(char) * BUFFER_SIZE);
 		bytes_read = read_data(&buf, fd);
+		if (bytes_read == 0 && ft_strlen(buf) == 0)
+		{
+			tmp = buf;
+			buf = NULL;
+			free(tmp);
+			offset = 0;
+			return (NULL);
+		}
 		if (bytes_read < 0)
 			return (NULL);
 	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
-	if (offset == (int)ft_strlen(buf))
+	if (offset >= (int)ft_strlen(buf))
 	{
 		tmp = buf;
 		buf = NULL;
