@@ -101,7 +101,7 @@ char	*get_next_line(int fd)
 	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
-	if (offset >= (int)ft_strlen(buf))
+	if (offset >= (int)ft_strlen(buf) || bytes_read < BUFFER_SIZE)
 		reset(&offset, &buf);
 	return (line);
 }
