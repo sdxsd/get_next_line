@@ -51,7 +51,10 @@ static ssize_t	read_data(char **buf, int fd)
 	{
 		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
 		bytes_read += read_data(&buf_2, fd);
+		//printf("\nBUF: %s\n", *buf);
+		//printf("\nBUF_2: %s\n", buf_2);
 		merged = merge(*buf, buf_2);
+		//printf("\nMERGED: %s\n", merged);
 		free(*buf);
 		free(buf_2);
 		*buf = merged;
