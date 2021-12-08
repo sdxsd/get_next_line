@@ -67,6 +67,8 @@ int	to_newline(char *buf)
 	iterator = 0;
 	while (buf[iterator] != '\0' && buf[iterator] != '\n')
 		iterator++;
+	if (buf[iterator] == '\0')
+		return (iterator);
 	return (iterator + 1);
 }
 

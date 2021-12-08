@@ -39,51 +39,51 @@ char	*gnl_strndup(const char *s1, size_t len)
 	if (!dupe_str)
 		return (NULL);
 	gnl_memcpy(dupe_str, s1, len);
-	dupe_str[len] = '\0';
-	return (dupe_str);
+dupe_str[len] = '\0';
+return (dupe_str);
 }
 
 size_t	ft_strlen(const char *str)
 {
-	size_t	iterator;
+size_t	iterator;
 
-	iterator = 0;
-	while (str[iterator] != '\0')
-		++iterator;
-	return (iterator);
+iterator = 0;
+while (str[iterator] != '\0')
+	++iterator;
+return (iterator);
 }
 
 char	*gnl_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
-	char	*b_str;
-	int		s1_l;
-	int		s2_l;
+char	*str;
+char	*b_str;
+int		s1_l;
+int		s2_l;
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	s1_l = ft_strlen(s1);
-	s2_l = ft_strlen(s2);
-	str = malloc((s1_l + s2_l) + 1);
-	if (!str)
-		return (NULL);
-	b_str = str;
-	gnl_memcpy(str, (char *)s1, s1_l);
-	str += s1_l;
-	gnl_memcpy(str, (char *)s2, s2_l);
-	str += s2_l;
-	*str = '\0';
-	return (b_str);
+if (s1 == NULL || s2 == NULL)
+	return (NULL);
+s1_l = ft_strlen(s1);
+s2_l = ft_strlen(s2);
+str = malloc((s1_l + s2_l) + 1);
+if (!str)
+	return (NULL);
+b_str = str;
+gnl_memcpy(str, (char *)s1, s1_l);
+str += s1_l;
+gnl_memcpy(str, (char *)s2, s2_l);
+str += s2_l;
+*str = '\0';
+return (b_str);
 }
 
 int	is_newline(char	*buf, ssize_t bytes_read)
 {
-	ssize_t	iterator;
+ssize_t	iterator;
 
-	iterator = 0;
-	while (iterator < bytes_read)
-	{
-		if (buf[iterator] == '\n')
+iterator = 0;
+while (iterator < bytes_read)
+{
+	if (buf[iterator] == '\n')
 			return (1);
 		iterator++;
 	}
