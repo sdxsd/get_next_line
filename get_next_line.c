@@ -93,10 +93,12 @@ char	*get_next_line(int fd)
 	if (!buf)
 	{
 		buf = malloc(sizeof(char) * BUFFER_SIZE);
+		if (!buf)
+			return (NULL);
 		bytes_read = read_data(&buf, fd);
 		if (bytes_read == 0)
 			return (reset(&offset, &buf));
-		if (bytes_read < 0)
+		else if (bytes_read < 0)
 			return (NULL);
 	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
