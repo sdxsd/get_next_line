@@ -12,6 +12,7 @@
 
 #include "get_next_line.h"
 #include <fcntl.h>
+#include <stdio.h>
 
 // Resets offset and frees buf when
 // get_next_line reaches end of file, or needs to make a new buf.
