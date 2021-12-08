@@ -26,13 +26,12 @@
 * fōrgenden līne in þe file. Et begint ān þen earsten līne. 
 */
 
+char	*ft_strncpy(char *dest, const char *src, size_t n);
 char	*merge(char *buf_1, char *buf_2);
 char	*get_next_line(int fd);
-void	*gnl_memcpy(void *dst, const void *src, size_t n);
 char	*gnl_strndup(const char *s1, size_t len);
 char	*gnl_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *str);
-char	*ft_strncpy(char *dest, char *src, size_t n);
 int		is_newline(char *buf, ssize_t bytes_read);
 
 #endif

@@ -12,23 +12,22 @@
 
 #include "get_next_line.h"
 
-void	*gnl_memcpy(void *dst, const void *src, size_t n)
+char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
-	size_t			iterator;
-	const char		*src_ptr;
-	char			*dst_ptr;
+	size_t	iterator;
 
-	if (dst == NULL && src == NULL)
-		return (dst);
 	iterator = 0;
-	src_ptr = src;
-	dst_ptr = dst;
-	while (iterator < n)
+	while (iterator < n && src[iterator] != '\0')
 	{
-		dst_ptr[iterator] = src_ptr[iterator];
+		dest[iterator] = src[iterator];
 		++iterator;
 	}
-	return (dst);
+	while (iterator < n)
+	{
+		dest[iterator] = '\0';
+		iterator++;
+	}
+	return (dest);
 }
 
 char	*gnl_strndup(const char *s1, size_t len)
@@ -38,7 +37,7 @@ char	*gnl_strndup(const char *s1, size_t len)
 	dupe_str = malloc((sizeof(char) * len) + 1);
 	if (!dupe_str)
 		return (NULL);
-	gnl_memcpy(dupe_str, s1, len);
+	ft_strncpy(dupe_str, s1, len);
 	dupe_str[len] = '\0';
 	return (dupe_str);
 }
@@ -68,9 +67,9 @@ char	*gnl_strjoin(char const *s1, char const *s2)
 	if (!str)
 		return (NULL);
 	b_str = str;
-	gnl_memcpy(str, (char *)s1, s1_l);
+	ft_strncpy(str, (char *)s1, s1_l);
 	str += s1_l;
-	gnl_memcpy(str, (char *)s2, s2_l);
+	ft_strncpy(str, (char *)s2, s2_l);
 	str += s2_l;
 	*str = '\0';
 	return (b_str);
