@@ -27,7 +27,7 @@
 */
 
 char	*ft_strncpy(char *dest, const char *src, size_t n);
-char	*merge(char *buf_1, char *buf_2);
+char	*merge(char *buf_1, char *buf_2, ssize_t b1_size, ssize_t b2_size);
 char	*get_next_line(int fd);
 char	*gnl_strndup(const char *s1, size_t len);
 char	*gnl_strjoin(char const *s1, char const *s2);

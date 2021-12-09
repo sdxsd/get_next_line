@@ -26,11 +26,17 @@ static char	*reset(int *offset, char **buf)
 
 // Returns the resulting
 // String made by combining the two arguments.
-char	*merge(char *buf_1, char *buf_2)
+char	*merge(char *buf_1, char *buf_2, ssize_t b1_size, ssize_t b2_size)
 {
 	char	*merged;
+	char	*shaved_b1;
+	char	*shaved_b2;
 
-	merged = gnl_strjoin(buf_1, buf_2);
+	shaved_b1 = gnl_strndup(buf_1, b1_size);
+	shaved_b2 = gnl_strndup(buf_2, b2_size);
+	merged = gnl_strjoin(shaved_b1, shaved_b2);
+	free(shaved_b1);
+	free(shaved_b2);
 	if (!merged)
 		return (NULL);
 	return (merged);
@@ -43,18 +49,34 @@ char	*merge(char *buf_1, char *buf_2)
 static ssize_t	read_data(char **buf, int fd)
 {
 	ssize_t	bytes_read;
+	ssize_t	ret;
+	ssize_t	ret1;
 	char	*buf_2;
 	char	*merged;
 
-	bytes_read = read(fd, *buf, BUFFER_SIZE);
+	bytes_read = 0;
+	ret1 = read(fd, *buf, BUFFER_SIZE);
+	bytes_read += ret1;
 	if (bytes_read > 0 && !is_newline(*buf, BUFFER_SIZE))
 	{
+		if (ret1 < BUFFER_SIZE)
+		{
+			merged = merge(*buf, "", ret1, 1);
+			free (*buf);
+			*buf = merged;
+		}
 		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
-		bytes_read += read_data(&buf_2, fd);
-		merged = merge(*buf, buf_2);
-		free(*buf);
-		free(buf_2);
-		*buf = merged;
+		ret = read_data(&buf_2, fd);
+		if (ret > 0)
+		{
+			bytes_read += ret;
+			merged = merge(*buf, buf_2, ret1, ret);
+			free(*buf);
+			free(buf_2);
+			*buf = merged;
+		}
+		else
+			free(buf_2);
 	}
 	return (bytes_read);
 }
