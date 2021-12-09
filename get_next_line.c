@@ -26,20 +26,30 @@ static char	*reset(int *offset, char **buf)
 
 // Returns the resulting
 // String made by combining the two arguments.
-char	*merge(char *buf_1, char *buf_2, ssize_t b1_size, ssize_t b2_size)
+char	*merge(char **buf_1, char **buf_2)
 {
 	char	*merged;
-	char	*shaved_b1;
-	char	*shaved_b2;
 
-	shaved_b1 = gnl_strndup(buf_1, b1_size);
-	shaved_b2 = gnl_strndup(buf_2, b2_size);
-	merged = gnl_strjoin(shaved_b1, shaved_b2);
-	free(shaved_b1);
-	free(shaved_b2);
+	merged = gnl_strjoin(*buf_1, *buf_2);
 	if (!merged)
 		return (NULL);
+	free(*buf_1);
+	free(*buf_2);
+	*buf_1 = merged;
 	return (merged);
+}
+
+// Returns how many characters until the next newline.
+int	to_newline(char *buf)
+{
+	ssize_t	iterator;
+
+	iterator = 0;
+	while (buf[iterator] != '\0' && buf[iterator] != '\n')
+		iterator++;
+	if (buf[iterator] == '\0')
+		return (iterator);
+	return (iterator + 1);
 }
 
 // Reads data continuously until buffer contains a newline character.
@@ -49,49 +59,23 @@ char	*merge(char *buf_1, char *buf_2, ssize_t b1_size, ssize_t b2_size)
 static ssize_t	read_data(char **buf, int fd)
 {
 	ssize_t	bytes_read;
-	ssize_t	ret;
-	ssize_t	ret1;
+	ssize_t	ret_2;
 	char	*buf_2;
-	char	*merged;
 
-	bytes_read = 0;
-	ret1 = read(fd, *buf, BUFFER_SIZE);
-	bytes_read += ret1;
-	if (bytes_read > 0 && !is_newline(*buf, BUFFER_SIZE))
+	bytes_read = read(fd, *buf, BUFFER_SIZE);
+	if (bytes_read > 0 && to_newline(*buf) > 0)
 	{
-		if (ret1 < BUFFER_SIZE)
+		buf_2 = ft_calloc(sizeof(char), BUFFER_SIZE);
+		if (!buf_2)
+			return (0);
+		ret_2 = read_data(&buf_2, fd);
+		if (ret_2 > 0)
 		{
-			merged = merge(*buf, "", ret1, 1);
-			free (*buf);
-			*buf = merged;
+			bytes_read += ret_2;
+			merge(buf, &buf_2);
 		}
-		buf_2 = malloc(sizeof(char) * BUFFER_SIZE);
-		ret = read_data(&buf_2, fd);
-		if (ret > 0)
-		{
-			bytes_read += ret;
-			merged = merge(*buf, buf_2, ret1, ret);
-			free(*buf);
-			free(buf_2);
-			*buf = merged;
-		}
-		else
-			free(buf_2);
 	}
 	return (bytes_read);
-}
-
-// Returns how many characters until the next newline.
-int	to_newline(char *buf)
-{
-	int	iterator;
-
-	iterator = 0;
-	while (buf[iterator] != '\0' && buf[iterator] != '\n')
-		iterator++;
-	if (buf[iterator] == '\0')
-		return (iterator);
-	return (iterator + 1);
 }
 
 char	*get_next_line(int fd)
@@ -103,7 +87,7 @@ char	*get_next_line(int fd)
 
 	if (!buf)
 	{
-		buf = malloc(sizeof(char) * BUFFER_SIZE);
+		buf = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
 		if (!buf)
 			return (NULL);
 		bytes_read = read_data(&buf, fd);

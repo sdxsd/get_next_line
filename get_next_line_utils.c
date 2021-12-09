@@ -12,6 +12,25 @@
 
 #include "get_next_line.h"
 
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*block;
+	char	*ptr;
+	size_t	iterator;
+
+	iterator = 0;
+	block = malloc(size * count);
+	if (!block)
+		return (NULL);
+	ptr = block;
+	while (iterator < size * count)
+	{
+		ptr[iterator] = 0;
+		iterator++;
+	}
+	return (block);
+}
+
 char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
 	size_t	iterator;
@@ -73,18 +92,4 @@ char	*gnl_strjoin(char const *s1, char const *s2)
 	str += s2_l;
 	*str = '\0';
 	return (b_str);
-}
-
-int	is_newline(char	*buf, ssize_t bytes_read)
-{
-	ssize_t	iterator;
-
-	iterator = 0;
-	while (iterator < bytes_read)
-	{
-		if (buf[iterator] == '\n')
-			return (1);
-		iterator++;
-	}
-	return (0);
 }
