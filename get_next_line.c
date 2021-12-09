@@ -62,6 +62,7 @@ char	*merge(char **buf_1, char **buf_2)
 		return (NULL);
 	free(*buf_1);
 	free(*buf_2);
+	*buf_2 = NULL;
 	*buf_1 = merged;
 	return (merged);
 }
@@ -101,6 +102,8 @@ static ssize_t	read_data(char **buf, int fd)
 			bytes_read += ret_2;
 			merge(buf, &buf_2);
 		}
+		else
+			free(buf_2);
 	}
 	return (bytes_read);
 }
