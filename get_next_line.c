@@ -115,6 +115,8 @@ char	*get_next_line(int fd)
 	ssize_t		bytes_read;
 	char		*line;
 
+	if (!fd)
+		return (NULL);
 	if (!buf)
 	{
 		buf = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
