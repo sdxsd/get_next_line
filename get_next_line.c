@@ -93,7 +93,7 @@ static ssize_t	read_data(char **buf, int fd)
 	bytes_read = read(fd, *buf, BUFFER_SIZE);
 	if (bytes_read > 0 && to_newline(*buf) > 0)
 	{
-		buf_2 = ft_calloc(sizeof(char), BUFFER_SIZE);
+		buf_2 = ft_calloc(sizeof(char), BUFFER_SIZE + 1);
 		if (!buf_2)
 			return (0);
 		ret_2 = read_data(&buf_2, fd);
@@ -124,7 +124,7 @@ char	*get_next_line(int fd)
 		if (bytes_read == 0)
 			return (reset(&offset, &buf));
 		else if (bytes_read < 0)
-			return (NULL);
+			return (reset(&offset, &buf));
 	}
 	line = gnl_strndup((buf + offset), to_newline(buf + offset));
 	offset += ft_strlen(line);
